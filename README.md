@@ -23,3 +23,5 @@ miniOS-project/
 └── scripts/                # 빌드 및 유틸리티 스크립트
     ├── build.sh            # 빌드 스크립트
     └── run_qemu.sh         # QEMU를 통해 OS 이미지 실행 스크립트
+
+
