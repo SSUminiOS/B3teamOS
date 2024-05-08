@@ -28,7 +28,10 @@ int main() {
         }
         else if (strcmp(input,"ipc") == 0){
             ipc_test();
-	}
+    	}
+        else if (strcmp(input,"pi") == 0){
+            calc_pi();
+        }
         else if (strncmp(input, "ptrace", strlen("ptrace")) == 0) {
             char* debug_input = input + strlen("ptrace") + 1;
             ptrace_command(debug_input);
