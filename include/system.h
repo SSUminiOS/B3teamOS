@@ -14,4 +14,10 @@ void whoami();
 int command(char *cmd);
 int ptrace_command(char *cmd);
 
+// extra/ipc.c
+int ipc_test();
+
+// extra/ipc.c
+int calc_pi();
+
 #endif
