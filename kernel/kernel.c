@@ -23,7 +23,14 @@ int main() {
         if (strcmp(input,"minisystem") == 0){
             minisystem();
         }
-        else system(input);
+        else if (strcmp(input,"whoami") == 0){
+            whoami();
+        }
+        else if (strcmp(input,"ipc") == 0){
+            ipc_test();
+        }
+        // 명령어를 실행할 때마다 fork를 수행한 후 실행하도록 변경
+        else command(input);
     }
 
     // 메모리 해제
