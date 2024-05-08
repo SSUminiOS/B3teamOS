@@ -32,6 +32,20 @@ int main() {
         else if (strcmp(input,"pi") == 0){
             calc_pi();
         }
+        else if (strcmp(input,"rr") == 0){
+            struct proc_table ptable = {};
+
+            register_proc(&ptable, "P1", 10, 10);
+            register_proc(&ptable, "P2", 5, 5);
+            register_proc(&ptable, "P3", 8, 8);
+            register_proc(&ptable, "P4", 3, 3);
+            register_proc(&ptable, "P5", 6, 6);
+            register_proc(&ptable, "P6", 7, 7);
+            register_proc(&ptable, "P7", 4, 4);
+            register_proc(&ptable, "P8", 9, 9);
+
+            rr_sched(&ptable);
+        }
         else if (strncmp(input, "ptrace", strlen("ptrace")) == 0) {
             char* debug_input = input + strlen("ptrace") + 1;
             ptrace_command(debug_input);
