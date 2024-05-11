@@ -1,21 +1,29 @@
 # Compiler and Compiler Flags
 CC=gcc
-CFLAGS=-Wall -g -Iinclude
+CFLAGS=-g -Iinclude -Idrivers
 # Linker flags
-LDFLAGS=-lreadline
+LDFLAGS=-lreadline -lrt
 
 # The build target executable:
 TARGET=minios
 
 # Source, Object files
-SRCS=kernel/kernel.c kernel/system.c kernel/20150498/rr.c \
-	kernel/20150498/command.c kernel/20150498/ipc.c kernel/20150498/pi.c
+SRCS= boot/boot.c \
+	drivers/helper.c \
+	drivers/primitive.c \
+	drivers/proc.c \
+	kernel/core.c \
+	kernel/input.c \
+	kernel/stat.c \
+	kernel/ui.c \
+	kernel/20150498/pi.c
+
 OBJS=$(SRCS:.c=.o) 
 
 # Include directory
 INCLUDE_DIR=include
 
-all: $(TARGET)
+all: $(TARGET) install_dependency
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
@@ -27,3 +35,6 @@ $(TARGET): $(OBJS)
 # Clean up:
 clean:
 	rm -f $(OBJS) $(TARGET)
+
+install_dependency:
+	sudo ./prepare.sh
