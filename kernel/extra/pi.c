@@ -38,7 +38,7 @@ void stop_pi(int sig) {
     msgctl(ANNOUNCE, IPC_RMID, NULL);
 }
 
-int calc_pi() {
+void calc_pi() {
     signal(SIGINT, stop_pi);
     // Create Message Queue and fetch ID
     GENERATE = msgget(IPC_PRIVATE, 0666 | IPC_CREAT);
@@ -52,7 +52,7 @@ int calc_pi() {
     pthread_join(tid[1], NULL);
     pthread_join(tid[2], NULL);
 
-    return 0;
+    return;
 }
 
 void *generate() {

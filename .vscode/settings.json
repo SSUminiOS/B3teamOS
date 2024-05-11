@@ -1,0 +1,18 @@
+{
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.cpp": "${capture}.h, ${capture}",
+        "*.c": "${capture}.h, ${capture}, ${capture}.o",
+    },
+    "files.associations": {
+        "stdio.h": "c",
+        "time.h": "c",
+        "signal.h": "c",
+        "unistd.h": "c",
+        "global.h": "c",
+        "proc.h": "c",
+        "primitive.h": "c",
+        "system.h": "c",
+        "helper.h": "c"
+    }
+}
