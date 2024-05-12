@@ -32,7 +32,7 @@ $(TARGET): $(OBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up:
+# Clean up:`
 clean:
 	rm -f $(OBJS) $(TARGET)
 
