@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <dirent.h>
+#include <semaphore.h>
 
 #include "helper.h"
 #include "global.h"
