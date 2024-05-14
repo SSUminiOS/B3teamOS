@@ -2,7 +2,7 @@
 CC=gcc
 CFLAGS=-g -Iinclude -Idrivers
 # Linker flags
-LDFLAGS=-lreadline -lrt
+LDFLAGS=-lreadline -lrt -lpthread
 
 # The build target executable:
 TARGET=minios
