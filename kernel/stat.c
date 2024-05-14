@@ -92,11 +92,30 @@ double calculate_memory_usage() {
     return used_memory * 100;
 }
 
+void print_proc_info(int pid) {
+    char path[40], line[256], state;
+    long virtualMem;
+    sprintf(path, "/proc/%d/stat", pid);
 
-// CPU, 메모리 사용량 및 완료된 프로세스 정보 보여주는 함수
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) {
+        perror("Error opening process stat file");
+        return;
+    }
+    // /proc/[pid]/stat 파일에서 상태(state)와 가상 메모리 크기(VmSize)를 읽습니다.
+    // 이 예에서는 필드 3(state)과 필드 23(vsize)를 읽습니다.
+    if (fscanf(fp, "%*d %*s %c %*d %*d %*d %*d %*d %*u %*lu %*lu %*lu %*lu %*lu %*lu %*ld %*ld %*ld %*ld %*ld %*ld %*llu %ld", &state, &virtualMem) != 2) {
+        perror("Error reading process stat file");
+    } else {
+        printf(" - PID: %d, State: %c, VmSize: %ld KB\n", pid, state, virtualMem / 1024);
+    }
+    fclose(fp);
+}
+
+// CPU, 메모리 사용량 보여주는 함수
 void stat_hdlr() {
-    cpu_usage = calculate_cpu_usage(); // CPU 사용량 계산
-    mem_usage = calculate_memory_usage(); // 메모리 사용량 계산
+    cpu_usage = calculate_cpu_usage();
+    mem_usage = calculate_memory_usage();
     struct task *p;
     int offset = 0;
 
@@ -121,21 +140,19 @@ void stat_hdlr() {
 
     sem_wait(ptable_sem);
     PRINT_RQ("[RQ]", p, &(ptable->rq), list);
+    list_for_each_entry(p, &(ptable->rq), list) {
+        print_proc_info(p->pid); // 각 프로세스의 정보를 출력
+    }
     PRINT_RQ("[END]", p, &(ptable->rq_done), list_done);
+    list_for_each_entry(p, &(ptable->rq_done), list_done) {
+        print_proc_info(p->pid); // 각 프로세스의 정보를 출력
+    }
 
     for_each_until(p, ptable->proc, ptable->proc_cnt)
         printf("P%2d: %d, %s\n", p->id, p->pid, task_stat_str[p->state]);
 
-    // rq_done 리스트의 프로세스 정보 출력
-    printf("[완료된 프로세스 정보]\n");
-    for_each_until(p, ptable->proc, ptable->proc_cnt) {
-        printf("P%2d: PID: %d, 상태: %s, CPU 사용량: %.2f%%, 메모리 사용량: %.2f%%\n", 
-                p->id, p->pid, task_stat_str[p->state], cpu_usage, mem_usage);
-    }
-
     sem_post(ptable_sem);
 }
-
 
 void os_status(struct os_args *args) {
     parse_args(args);
