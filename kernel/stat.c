@@ -93,10 +93,10 @@ double calculate_memory_usage() {
 }
 
 
-// CPU, 메모리 사용량 보여주는 함수
+// CPU, 메모리 사용량 및 완료된 프로세스 정보 보여주는 함수
 void stat_hdlr() {
-    cpu_usage = calculate_cpu_usage();
-    mem_usage = calculate_memory_usage();
+    cpu_usage = calculate_cpu_usage(); // CPU 사용량 계산
+    mem_usage = calculate_memory_usage(); // 메모리 사용량 계산
     struct task *p;
 
     system_d("clear");
@@ -121,12 +121,19 @@ void stat_hdlr() {
     sem_wait(ptable_sem);
     PRINT_RQ("[RQ]", p, &(ptable->rq), list);
     PRINT_RQ("[END]", p, &(ptable->rq_done), list_done);
-
     for_each_until(p, ptable->proc, ptable->proc_cnt)
         printf("P%2d: %d, %s\n", p->id, p->pid, task_stat_str[p->state]);
 
+    // rq_done 리스트의 프로세스 정보 출력
+    printf("[완료된 프로세스 정보]\n");
+    for_each_until(p, ptable->proc, ptable->proc_cnt) {
+        printf("P%2d: PID: %d, 상태: %s, CPU 사용량: %.2f%%, 메모리 사용량: %.2f%%\n", 
+                p->id, p->pid, task_stat_str[p->state], cpu_usage, mem_usage);
+    }
+
     sem_post(ptable_sem);
 }
+
 
 void os_status(struct os_args *args) {
     parse_args(args);
