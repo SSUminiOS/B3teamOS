@@ -6,7 +6,7 @@
 #include "helper.h"
 
 #define PANE_INPUT_Y  7 
-#define PANE_STATUS_Y 7
+#define PANE_STATUS_Y 14
 
 int count_panes() {
     int cnt;

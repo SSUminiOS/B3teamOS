@@ -17,6 +17,7 @@
 #define CLOCK       0.5
 #define EXIT_TMOUT  3
 
+int is_wsl();
 int get_cols();
 long epoch_now();
 void clear_line();

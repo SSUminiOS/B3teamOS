@@ -85,16 +85,16 @@ void init_tui() {
 }
 
 int main() {
-    /*
     int ptrace_scope;
-    shell("cat /proc/sys/kernel/yama/ptrace_scope", "%d", &ptrace_scope);
+    if (!is_wsl()) {
+        shell("cat /proc/sys/kernel/yama/ptrace_scope", "%d", &ptrace_scope);
 
-    if (ptrace_scope != 0) {
-        printf("PTRACE NOT READY. Please run following with sudo.\n");
-        printf("echo 0 > /proc/sys/kernel/yama/ptrace_scope\n");
-        exit(EXIT_FAILURE);
+        if (ptrace_scope != 0) {
+            printf("PTRACE NOT READY. Please run following with sudo.\n");
+            printf("echo 0 > /proc/sys/kernel/yama/ptrace_scope\n");
+            exit(EXIT_FAILURE);
+        }
     }
-    */
 
     init_global();
     // set common_sem to 1
@@ -107,4 +107,3 @@ int main() {
     system_d("tmux attach");
     return 0;
 }
-

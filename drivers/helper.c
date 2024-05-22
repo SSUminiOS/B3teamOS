@@ -11,6 +11,26 @@
 
 #include "helper.h"
 
+int is_wsl() {
+    FILE *fp;
+    char buffer[256];
+
+    fp = fopen("/proc/version", "r");
+    if (fp == NULL) {
+        perror("fopen");
+        return 0;
+    }
+
+    fgets(buffer, sizeof(buffer), fp);
+    fclose(fp);
+
+    if (strstr(buffer, "Microsoft") != NULL || strstr(buffer, "WSL") != NULL) {
+        return 1;
+    }
+
+    return 0;
+}
+
 void clear_line() {
     // ANSI escape code to move cursor to the beginning of the line and clear the line
     printf("\r\033[K");
