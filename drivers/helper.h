@@ -3,6 +3,7 @@
 
 #include <sys/types.h> 
 
+#define RQ_DONE_FILE  "RQ_DONE"
 #define SEM_NAME  "/sem"
 #define SHM_ORDER "/order"
 #define ORDER_PARENT 1
@@ -18,13 +19,14 @@
 
 int get_cols();
 long epoch_now();
+void clear_line();
 int is_invalid(char *str);
 void system_d(char *fmt, ...);
 void parse_cmd(char *cmd, char **args);
 char *get_random_str(const char *prefix);
 void shell(char *cmd, char *fmt, void *ptr);
+void read_file(const char *path, void (*hdlr)());
 void init_timer(void (*hdlr)(), int signo, double second);
-void read_file(const char *path, const char *fmt, void *ptr);
 
 #define EQ(buf, str) (strncmp(buf, str, strlen(str)) == 0)
 

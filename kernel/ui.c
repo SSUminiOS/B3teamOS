@@ -23,7 +23,7 @@ void reptyr_proc(pid_t pid) {
         pos = 2;
     else
         pos = count - 1;
-    system_d("tmux split-window -t MiniOS:0.%d 'reptyr %d; sleep 1;'", pos, pid);
+    system_d("tmux split-window -t MiniOS:0.%d 'reptyr %d; echo %d >> %s; sleep 1;'", pos, pid, pid, RQ_DONE_FILE);
     system_d("tmux select-pane -t MiniOS:0.%d -T %d", pos+1, pid);
 }
 

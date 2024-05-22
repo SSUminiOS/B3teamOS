@@ -47,6 +47,24 @@ struct task* proc_register(struct proc_table *ptable, pid_t pid, char *cmd) {
     return next;
 }
 
+struct task* proc_deregister(struct proc_table *ptable, pid_t pid) {
+    struct list_head *rq = &(ptable->rq);
+    struct task *p, *target = NULL;
+
+    for_each(p, ptable->proc) {
+        if (p->pid == pid)
+            target = p;
+        else if (p->pid > pid)
+            p->tmux_id --;
+    }
+
+    target->state = TASK_EXITED;
+    list_reinsert(&(target->list_done), &(ptable->rq_done));
+    list_del(&(target->list));
+
+    return target;
+}
+
 struct task* proc_set_timeout(struct task* p, int total_time) {
     p->time_remain = total_time;
     p->time_total = total_time;
@@ -101,11 +119,16 @@ void sched_handler(struct proc_table *ptable) {
     struct list_head *rq = &(ptable->rq);
     
     if (curr)
-        list_reinsert_tail(&(curr->list), rq);
+        if (curr->state != TASK_EXITED)
+            list_reinsert_tail(&(curr->list), rq);
+        else if (curr->state == TASK_EXITED)
+            list_del(&(curr->list));
 
     // check rq is not empty
     if (!list_empty(rq)) {
         curr = list_first_entry(rq, struct task, list);
         sched_next(ptable, curr, CLOCK);
+    } else {
+        curr = NULL;
     }
 }

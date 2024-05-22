@@ -19,6 +19,7 @@ void stat_hdlr() {
     double cpu_usage = 70;
     int pos = bar_width * (cpu_usage / 100.0);
     struct task *p;
+    int offset = 0;
 
     system_d("clear");
     printf("CPU : [");
@@ -32,7 +33,10 @@ void stat_hdlr() {
     PRINT_RQ("[RQ]", p, &(ptable->rq), list);
     PRINT_RQ("[END]", p, &(ptable->rq_done), list_done);
 
-    for_each_until(p, ptable->proc, ptable->proc_cnt)
+    if (ptable->proc_cnt > 5)
+        offset = ptable->proc_cnt - 5;
+    
+    for_each_offset_until(p, ptable->proc, offset, ptable->proc_cnt)
         printf("P%2d: %d, %s\n", p->id, p->pid, task_stat_str[p->state]);
 
     sem_post(ptable_sem);

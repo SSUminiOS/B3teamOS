@@ -70,26 +70,12 @@ void handle_input() {
     if (sem_trywait(input_sem) == -1)
         return;
 
-    printf("Received input: %s\n", input_buf);
+    printf("\nReceived input: %s\n", input_buf);
     if (EQ(input_buf, "exit"))
       exit(EXIT_SUCCESS);
     else if (EQ(input_buf, "pi")) {
       handler = calc_pi;
       arg = "calc_pi";
-    }
-    else if (EQ(input_buf, "rr")) {
-      struct proc_table ptable = {};
-
-      // task_register(&ptable, "P1", 10, 10);
-      // task_register(&ptable, "P2", 5, 5);
-      // task_register(&ptable, "P3", 8, 8);
-      // task_register(&ptable, "P4", 3, 3);
-      // task_register(&ptable, "P5", 6, 6);
-      // task_register(&ptable, "P6", 7, 7);
-      // task_register(&ptable, "P7", 4, 4);
-      // task_register(&ptable, "P8", 9, 9);
-
-      // rr_sched(&ptable);
     }
 
     cleanup_disabled = 1;
@@ -99,19 +85,39 @@ void handle_input() {
     resize_panes();
 }
 
+void check_rq_done(char *line) {
+    pid_t pid = atoi(line);
+    if (pid != 0)
+        proc_deregister(ptable, pid);
+}
 
 void loop_handler(int sig) {
     static int iter = 0;
-    printf("Sched iteration: %d\n", ++iter);
+    clear_line();
+    printf("\rSched iteration: %d", ++iter);
+    fflush(stdout);
+
+    // check if any exit process
+    // if RQ_DONE_FILE not exist, skip
+    if (access(RQ_DONE_FILE, F_OK) == 0) {
+        read_file(RQ_DONE_FILE, check_rq_done);
+        unlink(RQ_DONE_FILE);
+    }
 
     // handle pending input
     handle_input();
+
     sched_handler(ptable);
 }
 
+// 시그널 핸들러 함수
+void signal_handler(int signum) {
+    printf("Received signal: %d (%s)\n", signum, strsignal(signum));
+}
 
 void os_core(struct os_args *args) {
     parse_args(args);
+    unlink(RQ_DONE_FILE);
 
     // Initialize ptable
     init_ptable(ptable);

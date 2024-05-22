@@ -86,7 +86,7 @@ void init_tui() {
 
 int main() {
     int ptrace_scope;
-    read_file("/proc/sys/kernel/yama/ptrace_scope", "%d", &ptrace_scope);
+    shell("cat /proc/sys/kernel/yama/ptrace_scope", "%d", &ptrace_scope);
 
     if (ptrace_scope != 0) {
         printf("PTRACE NOT READY. Please run following with sudo.\n");
