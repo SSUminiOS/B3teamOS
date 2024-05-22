@@ -85,6 +85,7 @@ void init_tui() {
 }
 
 int main() {
+    /*
     int ptrace_scope;
     shell("cat /proc/sys/kernel/yama/ptrace_scope", "%d", &ptrace_scope);
 
@@ -93,6 +94,7 @@ int main() {
         printf("echo 0 > /proc/sys/kernel/yama/ptrace_scope\n");
         exit(EXIT_FAILURE);
     }
+    */
 
     init_global();
     // set common_sem to 1
