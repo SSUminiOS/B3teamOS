@@ -117,7 +117,6 @@ void stat_hdlr() {
     cpu_usage = calculate_cpu_usage();
     mem_usage = calculate_memory_usage();
     struct task *p;
-    int offset = 0;
 
     system_d("clear");
     printf("CPU : [");
@@ -147,12 +146,6 @@ void stat_hdlr() {
     list_for_each_entry(p, &(ptable->rq_done), list_done) {
         print_proc_info(p->pid); // 각 프로세스의 정보를 출력
     }
-
-    if (ptable->proc_cnt > 5)
-        offset = ptable->proc_cnt - 5;
-    
-    for_each_offset_until(p, ptable->proc, offset, ptable->proc_cnt)
-        printf("P%2d: %d, %s\n", p->id, p->pid, task_stat_str[p->state]);
 
     sem_post(ptable_sem);
 }
