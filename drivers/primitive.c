@@ -8,8 +8,8 @@
 
 #include "helper.h"
 #include "primitive.h"
-
 // 세마포어 생성 함수
+
 struct sem_info create_sem(const char *prefix) {
     struct sem_info semaphore;
     semaphore.name = get_random_str(prefix);
@@ -122,7 +122,8 @@ void list_add_tail(struct list_head *_new, struct list_head *head) {
 // 해당 목록의 entry 제거
 void list_del(struct list_head *entry) {
     __list_del_entry(entry);
-    INIT_LIST_HEAD(entry);
+    entry->next = entry;
+    entry->prev = entry;
 }
 
 // 해당 목록에 재삽입

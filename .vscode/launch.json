@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "debug ft_printf_test",
+        "type": "cppdbg",
+        "request": "launch",
+        // 현재 workspace를 기준으로 test.out 프로그램을 실행
+        "program": "${workspaceFolder}/minios",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "osx": {
+          "MIMode": "lldb"
+        },
+        "linux": {
+          "MIMode": "gdb"
+        },
+      }
+    ]
+  }

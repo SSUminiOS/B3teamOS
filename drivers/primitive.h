@@ -108,5 +108,8 @@ void list_del(struct list_head *entry);
 #define for_each_until(item, arr, until) \
     for (int i = 0; i < until && (item = &arr[i]); i++)
 
+#define for_each_offset_until(item, arr, offset, until) \
+    for (int i = offset; i < until && (item = &arr[i]); i++)
+
 #endif
 

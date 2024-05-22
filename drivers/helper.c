@@ -11,6 +11,12 @@
 
 #include "helper.h"
 
+void clear_line() {
+    // ANSI escape code to move cursor to the beginning of the line and clear the line
+    printf("\r\033[K");
+    fflush(stdout);
+}
+
 // Return the number of columns (terminal width)
 int get_cols() {
     struct winsize ws;
@@ -57,20 +63,17 @@ void shell(char *cmd, char *fmt, void *ptr) {
     pclose(fp);
 }
 
-void read_file(const char *path, const char *fmt, void *ptr) {
-    FILE *file = fopen(path, "r");
-    if (file == NULL) {
+void read_file(const char *path, void (*hdlr)()) {
+    FILE *fp = fopen(path, "r");
+    char buffer[BUF_SZ];
+
+    if (fp == NULL) {
         fprintf(stderr, "Failed to open file %s\n", path);
         exit(EXIT_FAILURE);
     }
 
-    if (fscanf(file, fmt, ptr) != 1) {
-        fprintf(stderr, "Failed to read data from file %s\n", path);
-        fclose(file);
-        exit(EXIT_FAILURE);
-    }
-
-    fclose(file);
+    while (fgets(buffer, sizeof(buffer), fp) != NULL)
+        hdlr(buffer);
 }
 
 char *get_random_str(const char *prefix) {
