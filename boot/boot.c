@@ -72,11 +72,11 @@ void init_tui() {
     system_d("tmux set mouse on");
 
     system_d("tmux split-window -h -t MiniOS:0.0");
-    spawn_proc(os_input, register_system, &args);
-    system_d("tmux kill-pane -t MiniOS:0.0");
     spawn_proc(os_core, register_system, &args);
-    
+    system_d("tmux kill-pane -t MiniOS:0.0");
     spawn_proc(os_status, register_system, &args);
+    
+    spawn_proc(os_input, register_system, &args);
     system_d("tmux kill-pane -t MiniOS:0.2");
     resize_panes();
 
