@@ -70,7 +70,7 @@ void handle_input() {
     if (sem_trywait(input_sem) == -1)
         return;
 
-    printf("\nReceived input: %s\n", input_buf);
+    /* printf("\nReceived input: %s\n", input_buf); */
     if (EQ(input_buf, "exit"))
       exit(EXIT_SUCCESS);
     else if (EQ(input_buf, "pi")) {

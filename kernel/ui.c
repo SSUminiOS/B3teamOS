@@ -5,8 +5,8 @@
 
 #include "helper.h"
 
-#define PANE_INPUT_Y  7 
-#define PANE_STATUS_Y 14
+#define PANE_INPUT_Y  7
+#define PANE_STATUS_Y 7
 
 int count_panes() {
     int cnt;
@@ -44,5 +44,5 @@ void resize_panes() {
             system_d("tmux resize-pane -t MiniOS:0.%d -y %d", PANE_RIGHT + i, pane_height);
     }
 
-    system_d("tmux select-pane -t MiniOS:0.0");
+    system_d("tmux select-pane -t MiniOS:0.2");
 }
