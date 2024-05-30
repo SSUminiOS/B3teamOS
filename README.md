@@ -70,12 +70,14 @@ MiniOS는 간단한 운영체제 시뮬레이션 환경으로, 다양한 핵심 
 
 2. **빌드**
     ```sh
-    make```
+    make
+    ```
 
 3. **실행**
     ```sh
     # 실행 오류날 경우, sudo su 환경에서 다음 명령 수행.
     echo 0 > /proc/sys/kernel/yama/ptrace_scope 
-    ./minios```
+    ./minios
+    ```
 
 
