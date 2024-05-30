@@ -148,7 +148,7 @@ int check_proc_running(int pid) {
     }
 
     fclose(fp);
-    
+
     //status fullname 변환
     const char* state_name;
     switch (state) {
@@ -156,7 +156,7 @@ int check_proc_running(int pid) {
             state_name = "running";
             break;
         case 'S':
-            state_name = "sleeping";
+            state_name = "running";
             break;
         case 'D':
             state_name = "disk sleep";
