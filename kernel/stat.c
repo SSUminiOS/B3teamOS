@@ -148,7 +148,8 @@ int check_proc_running(int pid) {
     }
 
     fclose(fp);
-
+    
+    //status fullname 변환
     const char* state_name;
     switch (state) {
         case 'R':
