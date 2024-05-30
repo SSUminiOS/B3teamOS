@@ -129,12 +129,10 @@ double calculate_memory_usage() {
     return used_memory * 100;
 }
 
-// 프로세스 상태를 확인하고 실행 중인 프로세스인지 여부를 반환
+// 프로세스 상태를 확인하고 실행 중인 프로세스인지 여부를 반환하는 함수
 int check_proc_running(int pid) {
     char path[40], state;
     long virtualMem;
-    double wait_time = get_wait_time(pid);
-    double total_time = get_process_time(pid);
     sprintf(path, "/proc/%d/stat", pid);
 
     FILE *fp = fopen(path, "r");
@@ -151,8 +149,48 @@ int check_proc_running(int pid) {
 
     fclose(fp);
 
-    printf(" - PID: %d, State: %c, VmSize: %ld KB\n", pid, state, virtualMem / 1024);
-    printf("process time: %f    wait time: %f\n",total_time,wait_time);
+    const char* state_name;
+    switch (state) {
+        case 'R':
+            state_name = "running";
+            break;
+        case 'S':
+            state_name = "sleeping";
+            break;
+        case 'D':
+            state_name = "disk sleep";
+            break;
+        case 'Z':
+            state_name = "zombie";
+            break;
+        case 'T':
+            state_name = "stopped";
+            break;
+        case 't':
+            state_name = "tracing stop";
+            break;
+        case 'X':
+        case 'x':
+            state_name = "dead";
+            break;
+        case 'K':
+            state_name = "wakekill";
+            break;
+        case 'W':
+            state_name = "waking";
+            break;
+        case 'P':
+            state_name = "parked";
+            break;
+        case 'I':
+            state_name = "idle";
+            break;
+        default:
+            state_name = "unknown";
+            break;
+    }
+
+    printf(" - PID: %d, State: %s, VmSize: %ld KB\n", pid, state_name, virtualMem / 1024);
     return (state != 'Z');
 }
 
