@@ -22,6 +22,44 @@ static double mem_usage = 0.0;
 static struct proc_table *ptable;
 static sem_t *ptable_sem;
 
+// process wait time
+double get_wait_time(int pid){
+    char path[256];
+    snprintf(path,sizeof(path),"/proc/%d/stat",pid);
+    FILE *fp = fopen(path,"r");
+    if (fp == NULL){
+        perror("Error opening file");
+        return -1;
+    }
+    long long unsigned uctime, sctime;
+    for(int i=1;i<=15;i++){
+        fscanf(fp,"%*s");
+    }
+    fscanf(fp,"%llu %llu",&uctime,&sctime);
+    fclose(fp);
+    double wait_time = (double)(uctime + sctime) / sysconf(_SC_CLK_TCK);
+    return wait_time;
+}
+
+// process running time
+double get_process_time(int pid){
+    char path[256];
+    snprintf(path,sizeof(path),"/proc/%d/stat",pid);
+    FILE *fp = fopen(path,"r");
+    if (fp == NULL){
+        perror("Error opening file");
+        return -1;
+    }
+    long long unsigned utime, stime;
+    for(int i=1;i<=13;i++){
+        fscanf(fp,"%*s");
+    }
+    fscanf(fp,"%llu %llu",&utime,&stime);
+    fclose(fp);
+    double total_time = (double)(utime + stime) / sysconf(_SC_CLK_TCK);
+    return total_time;
+}
+
 // CPU 사용량 계산 함수
 double calculate_cpu_usage() {
     long double a[4], b[4], loadavg;
@@ -95,6 +133,8 @@ double calculate_memory_usage() {
 int check_proc_running(int pid) {
     char path[40], state;
     long virtualMem;
+    double wait_time = get_wait_time(pid);
+    double total_time = get_process_time(pid);
     sprintf(path, "/proc/%d/stat", pid);
 
     FILE *fp = fopen(path, "r");
@@ -112,6 +152,7 @@ int check_proc_running(int pid) {
     fclose(fp);
 
     printf(" - PID: %d, State: %c, VmSize: %ld KB\n", pid, state, virtualMem / 1024);
+    printf("process time: %f    wait time: %f\n",total_time,wait_time);
     return (state != 'Z');
 }
 
