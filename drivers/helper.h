@@ -14,7 +14,7 @@
 
 #define BUF_SZ      256
 #define TASK_CNT    32
-#define CLOCK       0.5
+#define CLOCK       1.0
 #define EXIT_TMOUT  3
 
 int is_wsl();
