@@ -22,44 +22,6 @@ static double mem_usage = 0.0;
 static struct proc_table *ptable;
 static sem_t *ptable_sem;
 
-// process wait time
-double get_wait_time(int pid){
-    char path[256];
-    snprintf(path,sizeof(path),"/proc/%d/stat",pid);
-    FILE *fp = fopen(path,"r");
-    if (fp == NULL){
-        perror("Error opening file");
-        return -1;
-    }
-    long long unsigned uctime, sctime;
-    for(int i=1;i<=15;i++){
-        fscanf(fp,"%*s");
-    }
-    fscanf(fp,"%llu %llu",&uctime,&sctime);
-    fclose(fp);
-    double wait_time = (double)(uctime + sctime) / sysconf(_SC_CLK_TCK);
-    return wait_time;
-}
-
-// process running time
-double get_process_time(int pid){
-    char path[256];
-    snprintf(path,sizeof(path),"/proc/%d/stat",pid);
-    FILE *fp = fopen(path,"r");
-    if (fp == NULL){
-        perror("Error opening file");
-        return -1;
-    }
-    long long unsigned utime, stime;
-    for(int i=1;i<=13;i++){
-        fscanf(fp,"%*s");
-    }
-    fscanf(fp,"%llu %llu",&utime,&stime);
-    fclose(fp);
-    double total_time = (double)(utime + stime) / sysconf(_SC_CLK_TCK);
-    return total_time;
-}
-
 // CPU 사용량 계산 함수
 double calculate_cpu_usage() {
     long double a[4], b[4], loadavg;
@@ -226,6 +188,7 @@ void stat_hdlr() {
     PRINT_RQ("[RQ]: ", p, &(ptable->rq), list);
     list_for_each_entry(p, &(ptable->rq), list) {
         if (check_proc_running(p->pid)) {
+            printf("process time: %d    wait time: %d\n",(p->time_spent),(p->time_wait));
             running_procs++;
         }
     }
@@ -234,6 +197,9 @@ void stat_hdlr() {
     list_for_each_entry(p, &(ptable->rq_done), list_done) {
         if (check_proc_running(p->pid)) {
             running_procs++;
+        }
+        else {
+            printf("total run time: %d    total wait time: %d\n",(p->time_spent),(p->time_wait));
         }
     }
 
