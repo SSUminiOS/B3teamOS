@@ -105,7 +105,7 @@ void sched_next(struct proc_table *ptable, struct task* next, int ts) {
     list_for_each_entry(p, rq, list) {
         send_signal(p->pid, SIGSTOP);
         if (p != next) {
-            p->time_spent += ts;
+            // p->time_spent += ts;
             p->time_wait += ts;
         }
     }
